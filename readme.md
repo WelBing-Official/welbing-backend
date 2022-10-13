@@ -1,10 +1,16 @@
+<div style="width:max-content; margin:auto;">
+    <img src="./logo.jpg" alt="Welbing Logo" style="height:300px;">
+</div>
+
 # Welbing Waitlist Server
 
 This is the server for handling http requests from the welbing waitlist page
 
-# Usage
+# Usage & Endpoint
 
-This server listens for **GET** and **POST** requests
+URL : [https://welbing-waitlist.herokuapp.com/](https://welbing-waitlist.herokuapp.com/)
+
+This server listens for **GET** and **POST** requests on the endpoint "/"
 
 # GET Requests
 
@@ -27,7 +33,7 @@ The response from the server to a **GET** request from an allowed origin is as s
 {
   "name":"full name",
   "email": "user@exampe.com",
-  "category": "basic" || "practitioner" || "hospital"
+  "category": "basic practitioner hospital"
 }
 ```
 The **category** property's value should be one of those above
@@ -57,7 +63,7 @@ The **category** property's value should be one of those above
 ```JSON
 {
     "resolved" : false,
-    "message" : `Server error`
+    "message" : "Server error"
 }
 ```
 
