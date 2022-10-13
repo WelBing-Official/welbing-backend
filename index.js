@@ -31,10 +31,7 @@ app.post("/",(req,res) => {
     req.on("end", () => {
         try {
             const params = JSON.parse(body);
-            const arr = [];
-            for(i in params) {
-                arr.push(params[i]);
-            }
+            const arr = [params.name , params.email , params.category];
             if(arr.some(e => !e)) {
                 res.status(200).json({
                     resolved : false,
