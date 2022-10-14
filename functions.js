@@ -83,7 +83,33 @@ module.exports.add_user = function(name , email , category , callback) {
                 }
                 else {
                     //work on categorizing the emails based on the category selected by the user
-                    mail(email , "Thanks for joining our waitlist", "<b>Thanks for joining our waitlist</b>", () => {
+                    mail(email , "Thanks for joining our waitlist", `
+                    <div style="width: 100%;">
+                        <div style="color: #383838; max-width: 400px; margin: auto; ">
+                            <div style="border-bottom: 0.6px solid #ffffff;height: 10vh;min-height: max-content;width: 100%;padding: 5px 10px;">
+                                <br/>
+                                <a href="https://welbing.netlify.app/" style="height: 50px;margin: auto; display: block;">
+                                    <img src="https://welbing.netlify.app/assets/Logo.076a8893.png" alt="Welbing" style="display: block; height: 32px; margin: auto;"/>
+                                </a>
+                            </div>
+                            <div style="margin: 0 0 0px;padding: 50px 40px; background-color:#2d286308;">
+                                <h1 style="margin-top: 30px;">Hello there ${name}!!</h1>
+                                <p style="margin-top: 20px;">
+                                    We're so glad that you took your time to join our waitlist, with welbing we are trying to make the hospitals sector a better place for both me and you!
+                                    From the public hospitals to the private hospitals and medical practitioners too!!</p>
+                                <p style="margin-top: 20px;">
+                                    We hope you stick around and see what greatness we're building here.
+                                    We will send you newsletters showing how far we've gotten and pointing out how and where we can help your category of people using our solution, so you just hang in there and wait while we do our part.
+                                </p>
+                                <p style="margin-top: 20px;">Have a nice day!!</p>
+                                <p style="margin-top: 20px;">
+                                    <b>Regards</b>,
+                                    <br/>
+                                    Team WelBing.
+                                </p>
+                            </div>
+                        </div>
+                    </div>`, () => {
                         callback({
                             resolved : true,
                             message : "Has joined successfully"
