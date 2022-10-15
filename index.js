@@ -8,14 +8,7 @@ const port = process.env.PORT || 4000;
 const allowedOrigin = process.env.ALLOWED_ORIGIN;
 
 app.use(cors({
-    origin: function(origin, callback){
-      if(!origin) return callback(null, true);
-      if(allowedOrigin !== origin){
-        const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-        return callback(msg, false);
-      }
-      return callback(null, true);
-    }
+    origin: allowedOrigin
   }));
 
 app.get("/",(req, res) => {
