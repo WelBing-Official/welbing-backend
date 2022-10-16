@@ -457,26 +457,29 @@ module.exports.update_profile = function(data, callback) {
             if(name !== data.name.trim()) {
                 name = data.name.trim()
             }
-            let profile_data;
+            let profile_data , column;
             if(data.category === "basic") {
                 profile_data = JSON.parse(result[0].health_profile);
+                column = "health_profile";
             }
             else {
                 profile_data = JSON.parse(result[0].profile_data);
+                column = "profile_data";
             }
             for(let i in data.profile) {
                 if(data.profile[i] && data.profile[i] !== profile_data[i]) {
                     if(i == "weight" && data.category === "basic") {
                         profile_data.weight.value = data.profile[i];
                         profile_data.weight.time = new Date().toString();
+                        profile_data.weight = JSON.stringify(profile_data.weight)
                     }
                     else {
                         profile_data[i] = data.profile[i];
                     }
                 }
             }
-            const sql = "UPDATE basic SET name = ? , health_profile = ? WHERE tracking_id = ?";
-            const values = [name , profile_data];
+            const sql = `UPDATE ${data.category} SET name = ? , ${column} = ? WHERE tracking_id = ?`;
+            const values = [name , JSON.stringify(profile_data) , data.tracking_id];
             con.query(sql , values , (err , result , fields) => {
                 if(err) {
                     console.log(err)

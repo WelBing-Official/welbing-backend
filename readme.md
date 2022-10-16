@@ -85,15 +85,20 @@ The **category** property's value should be one of those above
 }
 ```
 
+
+
+# These following sections are not fully explained because of time
+
+
 # Report posting
 
 ```JSON
 {
-  "patient_tracking_id" : "wp7rn7los96gidkn60nnz",
+  "patient_tracking_id" : "",
   "doctor_name" : "John Doe",
   "medical_report" : "Patient is a 38-year-old female with a history of hypertension and obesity. She has been treated for both conditions with medication for the past 5 years. She has also been diagnosed with type 2 diabetes mellitus 3 years ago and is currently being treated with insulin injections and oral medication. She has no known allergies and has never been hospitalized.", 
   "optional_tag" : "",
-  "hospital_tracking_id" : "0iyzfs9lp8hbd5yguf14l"
+  "hospital_tracking_id" : ""
 }
 ```
 
@@ -101,10 +106,10 @@ The **category** property's value should be one of those above
 
 ```JSON
 {
-  "name" : "Udezue OLuomachi Chimaobi",
-  "email" : "basilchimaobi2@gmail.com",
-  "password" : "jfbejibyhrbguirbg",
-  "category" : "basic"
+  "name" : "",
+  "email" : "",
+  "password" : "",
+  "category" : ""
 }
 ```
 
@@ -112,9 +117,9 @@ The **category** property's value should be one of those above
 
 ```JSON
 {
-  "email" : "basilchimaobi2@gmail.com",
-  "password" : "jfbejibyhrbguirbg",
-  "category" : "basic"
+  "email" : "",
+  "password" : "",
+  "category" : ""
 }
 ```
 
@@ -122,7 +127,7 @@ The **category** property's value should be one of those above
 
 ```JSON
 {
-  "name" : "Oluomachi"
+  "name" : ""
 }
 ```
 
@@ -130,20 +135,22 @@ The **category** property's value should be one of those above
 
 ```JSON
 {
-  "patient_tracking_id" : "dydn3rsebukoc7nzo2bru",
+  "patient_tracking_id" : "",
   "doctor_name" : "John Doe",
   "reason" : "Patient is a 38-year-old female with a history of hypertension and obesity. She has been treated for both conditions with medication for the past 5 years. She has also been diagnosed with type 2 diabetes mellitus 3 years ago and is currently being treated with insulin injections and oral medication. She has no known allergies and has never been hospitalized.", 
   "tag_name" : "Diabetes patient",
-  "hospital_tracking_id" : "0iyzfs9lp8hbd5yguf14l"
+  "hospital_tracking_id" : ""
 }
 ```
 
 # Profile Edit / Setup
 
+This data format is for only the basic category
+
 ```JSON
 {
-    "name": "Udezue OLuomachi Chimaobi",
-    "tracking_id": "hve6695crqizsusx1x7hs",
+    "name": ",
+    "tracking_id": "",
     "category" : "basic",
     "profile": {
         "gender": "",
