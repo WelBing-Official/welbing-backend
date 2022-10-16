@@ -2,21 +2,48 @@
     <img src="./logo.jpg" alt="Welbing Logo" style="height:300px;">
 </div>
 
-# Welbing Waitlist Server
+# Welbing Data Server
 
-This is the server for handling http requests from the welbing waitlist page
+This is the server for handling http requests from the http client of the MVP
 
 # Usage & Endpoint
 
 URL : [https://welbing-waitlist.herokuapp.com/](https://welbing-waitlist.herokuapp.com/)
 
-This server listens for **GET** and **POST** requests on the endpoint "/"
+### ENDPOINTS
 
-# GET Requests
+* "/"
+* "/wait-list"
+* "/register"
+* "/search"
+* "/post-report"
+* "/post-tag"
+* "/login"
+* "/update-profile"
 
-Get requests made to this server are for test purpose. This is to test the connection to the server
 
-The response from the server to a **GET** request from an allowed origin is as such below
+## Acceptable HTTP Methods For Endpoints
+
+### GET Requests
+
+* "/"
+* "/search"
+
+### POST Requests
+
+* "/wait-list"
+* "/register"
+* "/post-report"
+* "/post-tag"
+* "/login"
+* "/update-profile"
+
+
+# "/" Endpoint
+
+Get requests made on this endpoint are for test purposes.
+
+The response from the server on this endpoint request from an allowed origin is as such below
 
 ```JSON
 {
@@ -29,6 +56,7 @@ The response from the server to a **GET** request from an allowed origin is as s
 
 **POST** requests made to this server should only send data which is in **JSON** format and the structure of the **JSON** data should be as the one below
 
+#
 ```JSON
 {
   "name":"full name",
