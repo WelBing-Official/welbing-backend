@@ -154,7 +154,7 @@ module.exports.register_user = function(name, email, password , category , callb
         else if(result.length > 0) {
             callback({
                 resolved : true,
-                message : "Already had an account",
+                message : "exists",
                 addon : {
                     tracking_id : result[0].tracking_id
                 }
