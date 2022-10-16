@@ -52,10 +52,28 @@ function mail(email, subject, html , callback) {
    });
 }
 
-module.exports.add_user = function(name , email , category , callback) {
+function random_string(len) {
+    const string = "qwe1r5t2yu3iop4as6dfgh78jklz0xcvb9nm";
+    let new_string = "";
+    for(let i = 0; i <= len; i++) {
+        new_string += string[Math.floor(Math.random() * string.length)];
+    }
+    return new_string;
+}
+
+function random_number(len) {
+    let num = "";
+    for(let i= 0; i < len; i++) {
+        num += Math.floor(Math.random() * 10);
+    }
+    return Number(num)
+}
+
+module.exports.add_user_to_waitlist = function(name , email , category , callback) {
     const sql = `SELECT email_address FROM users WHERE email_address = ?`;
     const value = [email];
     con.query(sql , value , (err , result) => {
+        end_con();
         if(err) {
             console.log(err)
             callback({
@@ -64,7 +82,6 @@ module.exports.add_user = function(name , email , category , callback) {
             });
         }
         else if(result.length > 0) {
-            end_con();
             callback({
                 resolved : false,
                 message : "Already joined before"
@@ -74,6 +91,7 @@ module.exports.add_user = function(name , email , category , callback) {
             const sql = `INSERT INTO users (name, email_address, category) VALUES (?,?,?)`;
             const values = [name,email, category];
             con.query(sql , values , (err, result) => {
+                end_con();
                 if(err) {
                     console.log(err)
                     callback({
@@ -120,3 +138,269 @@ module.exports.add_user = function(name , email , category , callback) {
         }
     })
 };
+
+module.exports.register_user = function(name, email, password , category , callback) {
+    const sql = `SELECT tracking_id FROM ${category} WHERE email_address = ? AND password = ? LIMIT 1`;
+    const values = [email, password];
+    con.query(sql , values , (err, result) => {
+        end_con();
+        if(err) {
+            console.log(err);
+            callback({
+                resolved : false,
+                message : `Server error`
+            });
+        }
+        else if(result.length > 0) {
+            callback({
+                resolved : true,
+                message : "Already had an account",
+                addon : {
+                    tracking_id : result[0].tracking_id
+                }
+            })
+        }
+        else {
+            let sql = "";
+            let values = [];
+            const tracking_id = random_string(20);
+            switch (category) {
+                case "practitioner":
+                    sql = "INSERT INTO practitioner (name , email_address , password , tracking_id , email_verificaton_code , email_verified , profile_data) VALUES (?,?,?,?,?,?,?)";
+                    values = [name, email, password, tracking_id ,random_number(5) , 0, JSON.stringify({
+                        gender : "",
+                        date_of_birth : "",
+                        contact_info : "",
+                        area_of_specialization : "",
+                        place_of_work : "",
+                        rating : 0
+                    })];
+                    break;
+                case "hospital":
+                    sql = "INSERT INTO hospital (name , email_address , password , tracking_id , email_verificaton_code , email_verified , profile_data) VALUES (?,?,?,?,?,?,?)";
+                    values = [name, email, password, tracking_id ,random_number(5) , 0, JSON.stringify({
+                        location : "",
+                        rating : 0
+                    })];
+                    break;
+                default:
+                    sql = "INSERT INTO basic (name , email_address , password , tracking_id , email_verificaton_code , email_verified , health_profile , medical_report , tags) VALUES (? , ? , ? , ? , ? , ?, ?, ?, ?)";
+                    values = [name , email, password , tracking_id ,random_number(5) , 0, JSON.stringify({
+                        gender : "",
+                        date_of_birth : "",
+                        address : "",
+                        occupation : "",
+                        contact_information : "",
+                        emergency_contact_information : "",
+                        Nationality : "",
+                        state_of_origin : "",
+                        genotype : "",
+                        blood_type : "",
+                        genetic_disease : "",
+                        Allergies : "",
+                        physical_challenge : "",
+                        weight : {
+                            value : "",
+                            time : ""
+                        }
+                    }) , JSON.stringify([]), JSON.stringify([])];
+                    break;
+            }
+            con.query(sql , values , (err, result) => {
+                end_con();
+                if(err) {
+                    console.log(err);
+                    callback({
+                        resolved : false,
+                        message : `Server error`
+                    });
+                }
+                else {
+                    //the message sent to the frontend should be the tracking id
+                    callback({
+                        resolved : true,
+                        message : "Registration successfull. Check email for verification code",
+                        addon : {
+                            tracking_id : tracking_id
+                        }
+                    });
+                }
+            })
+        }
+    })
+}
+
+module.exports.search_patient = function(name, callback) {
+    const sql = 'SELECT name ,  tracking_id , health_profile , medical_report , tags FROM basic WHERE name LIKE ?';
+    const values = [`%${name.trim()}%`];
+    con.query(sql, values, (err, result) => {
+        end_con();
+        if(err) {
+            console.log(err);
+            callback({
+                resolved : false,
+                message : `Server error`
+            });
+        }
+        else {
+            const response_obj = [];
+            if(result.length > 0) {
+                result.forEach(e => {
+                    response_obj.push({
+                        name : e.name,
+                        tracking_id : e.tracking_id,
+                        profile : JSON.parse(e.health_profile),
+                        medical_report : JSON.parse(e.medical_report),
+                        tags : JSON.parse(e.tags)
+                    })
+                })
+            }
+            callback({
+                resolved : true,
+                message : response_obj
+            })
+        }
+    })
+}
+
+module.exports.post_medical_report = function(patient_tracking_id, doctor_name, medical_report , option_tag , hospital_tracking_id, callback) {
+    const sql = "SELECT * FROM hospital WHERE tracking_id = ? LIMIT 1";
+    const value = [hospital_tracking_id];
+    con.query(sql, value, (err, result) => {
+        end_con();
+        if(err) {
+            console.log(err);
+            callback({
+                resolved : false,
+                message : `Server error`
+            });
+        }
+        if(result.length > 0) {
+            const hospital_info = `${result[0].name} , ${JSON.parse(result[0].profile_data).location}`;
+            const sql = "SELECT medical_report FROM basic WHERE tracking_id = ?";
+            const value = [patient_tracking_id];
+            con.query(sql, value, (err, result) => {
+                end_con();
+                if(err) {
+                    console.log(err);
+                    callback({
+                        resolved : false,
+                        message : `Server error`
+                    });
+                }
+                if(result.length > 0) {
+                    const medical_reports = JSON.parse(result[0].medical_report);
+                    medical_reports.push({
+                        doctor_name : doctor_name,
+                        medical_report : medical_report,
+                        option_tag : option_tag,
+                        hospital_info : hospital_info,
+                        time : new Date().toString()
+                    });
+                    const sql = "UPDATE basic SET medical_report = ? WHERE tracking_id = ?";
+                    const values = [JSON.stringify(medical_reports) , patient_tracking_id];
+                    con.query(sql , values , (err, result , fields) => {
+                        end_con();
+                        if(err) {
+                            console.log(err);
+                            callback({
+                                resolved : false,
+                                message : `Server error`
+                            });
+                        }
+                        else {
+                            callback({
+                                resolved : true,
+                                message : `Report posted`
+                            });
+                        }
+                    })
+                }
+                else {
+                    callback({
+                        resolved : false,
+                        message : `Wrong patient tracking id`
+                    });
+                }
+            })
+        }
+        else {
+            callback({
+                resolved : false,
+                message : `Wrong hospital's tracking id`
+            });
+        }
+    })
+}
+
+
+module.exports.add_tag = function(patient_tracking_id, doctor_name, reason , tag_name , hospital_tracking_id, callback) {
+    const sql = "SELECT * FROM hospital WHERE tracking_id = ? LIMIT 1";
+    const value = [hospital_tracking_id];
+    con.query(sql, value, (err, result) => {
+        end_con();
+        if(err) {
+            console.log(err);
+            callback({
+                resolved : false,
+                message : `Server error`
+            });
+        }
+        if(result.length > 0) {
+            const hospital_info = `${result[0].name} , ${JSON.parse(result[0].profile_data).location}`;
+            const sql = "SELECT tags FROM basic WHERE tracking_id = ?";
+            const value = [patient_tracking_id];
+            con.query(sql, value, (err, result) => {
+                end_con();
+                if(err) {
+                    console.log(err);
+                    callback({
+                        resolved : false,
+                        message : `Server error`
+                    });
+                }
+                if(result.length > 0) {
+                    const tags = JSON.parse(result[0].tags);
+                    tags.push({
+                        doctor_name : doctor_name,
+                        reason : reason,
+                        tag_name : tag_name,
+                        hospital_info : hospital_info,
+                        time : new Date().toString()
+                    });
+                    const sql = "UPDATE basic SET tags = ? WHERE tracking_id = ?";
+                    const values = [JSON.stringify(tags) , patient_tracking_id];
+                    con.query(sql , values , (err, result , fields) => {
+                        end_con();
+                        if(err) {
+                            console.log(err);
+                            callback({
+                                resolved : false,
+                                message : `Server error`
+                            });
+                        }
+                        else {
+                            callback({
+                                resolved : true,
+                                message : `Tag added to patient's profile`
+                            });
+                        }
+                    })
+                }
+                else {
+                    callback({
+                        resolved : false,
+                        message : `Wrong patient tracking id`
+                    });
+                }
+            })
+        }
+        else {
+            callback({
+                resolved : false,
+                message : `Wrong hospital's tracking id`
+            });
+        }
+    })
+}
+

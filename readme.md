@@ -85,4 +85,47 @@ The **category** property's value should be one of those above
 }
 ```
 
+# Report posting
+
+```JSON
+{
+  "patient_tracking_id" : "wp7rn7los96gidkn60nnz",
+  "doctor_name" : "John Doe",
+  "medical_report" : "Patient is a 38-year-old female with a history of hypertension and obesity. She has been treated for both conditions with medication for the past 5 years. She has also been diagnosed with type 2 diabetes mellitus 3 years ago and is currently being treated with insulin injections and oral medication. She has no known allergies and has never been hospitalized.", 
+  "optional_tag" : "",
+  "hospital_tracking_id" : "0iyzfs9lp8hbd5yguf14l"
+}
+```
+
+# Register
+
+```JSON
+{
+  "name" : "Udezue OLuomachi Chimaobi",
+  "email" : "basilchimaobi2@gmail.com",
+  "password" : "jfbejibyhrbguirbg",
+  "category" : "basic"
+}
+```
+
+# Search
+
+```JSON
+{
+  "name" : "Oluomachi"
+}
+```
+
+# Post Tag
+
+```JSON
+{
+  "patient_tracking_id" : "dydn3rsebukoc7nzo2bru",
+  "doctor_name" : "John Doe",
+  "reason" : "Patient is a 38-year-old female with a history of hypertension and obesity. She has been treated for both conditions with medication for the past 5 years. She has also been diagnosed with type 2 diabetes mellitus 3 years ago and is currently being treated with insulin injections and oral medication. She has no known allergies and has never been hospitalized.", 
+  "tag_name" : "Diabetes patient",
+  "hospital_tracking_id" : "0iyzfs9lp8hbd5yguf14l"
+}
+```
+
 made with 💖 by [Udezue Oluomachi Chimaobi](https://github.com/udezueoluomachi)
