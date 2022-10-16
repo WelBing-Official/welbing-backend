@@ -144,6 +144,7 @@ The **category** property's value should be one of those above
 {
     "name": "Udezue OLuomachi Chimaobi",
     "tracking_id": "hve6695crqizsusx1x7hs",
+    "category" : "basic",
     "profile": {
         "gender": "",
         "date_of_birth": "",

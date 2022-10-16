@@ -203,7 +203,8 @@ app.post("/update-profile", (req, res) => {
         try {
             const params = JSON.parse(body);
             const arr = [params.name , params.profile, params.tracking_id];
-            if(arr.some(e => !e)) {
+            const category = ["basic", "practitioner" , "hospital"];
+            if(arr.some(e => !e) || category.indexOf(params.category) === -1 ) {
                 res.status(200).json({
                     resolved : false,
                     message : "Input error"

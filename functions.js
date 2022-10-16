@@ -435,7 +435,13 @@ module.exports.login = function(email, password , category , callback) {
 }
 
 module.exports.update_profile = function(data, callback) {
-    const sql = "SELECT name , health_profile FROM basic WHERE tracking_id = ? LIMIT 1";
+    let sql = "";
+    if(data.category === "basic") {
+        sql = "SELECT name , health_profile FROM basic WHERE tracking_id = ? LIMIT 1";
+    }
+    else {
+        sql = `SELECT name , profile_data FROM ${data.category} WHERE tracking_id = ? LIMIT 1`;
+    }
     const value = [data.tracking_id];
     con.query(sql , value , (err , result) => {
         end_con();
@@ -451,10 +457,16 @@ module.exports.update_profile = function(data, callback) {
             if(name !== data.name.trim()) {
                 name = data.name.trim()
             }
-            let profile_data = JSON.parse(result[0].health_profile);
+            let profile_data;
+            if(data.category === "basic") {
+                profile_data = JSON.parse(result[0].health_profile);
+            }
+            else {
+                profile_data = JSON.parse(result[0].profile_data);
+            }
             for(let i in data.profile) {
                 if(data.profile[i] && data.profile[i] !== profile_data[i]) {
-                    if(i == "weight") {
+                    if(i == "weight" && data.category === "basic") {
                         profile_data.weight.value = data.profile[i];
                         profile_data.weight.time = new Date().toString();
                     }
