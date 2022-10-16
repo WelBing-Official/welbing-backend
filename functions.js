@@ -433,3 +433,59 @@ module.exports.login = function(email, password , category , callback) {
         }
     });
 }
+
+module.exports.update_profile = function(data, callback) {
+    const sql = "SELECT name , health_profile FROM basic WHERE tracking_id = ? LIMIT 1";
+    const value = [data.tracking_id];
+    con.query(sql , value , (err , result) => {
+        end_con();
+        if(err) {
+            console.log(err)
+            callback({
+                resolved : false,
+                message : "Server error"
+            });
+        }
+        else if(result.length > 0) {
+            let name = result[0].name;
+            if(name !== data.name.trim()) {
+                name = data.name.trim()
+            }
+            let profile_data = JSON.parse(result[0].health_profile);
+            for(let i in data.profile) {
+                if(data.profile[i] && data.profile[i] !== profile_data[i]) {
+                    if(i == "weight") {
+                        profile_data.weight.value = data.profile[i];
+                        profile_data.weight.time = new Date().toString();
+                    }
+                    else {
+                        profile_data[i] = data.profile[i];
+                    }
+                }
+            }
+            const sql = "UPDATE basic SET name = ? , health_profile = ? WHERE tracking_id = ?";
+            const values = [name , profile_data];
+            con.query(sql , values , (err , result , fields) => {
+                if(err) {
+                    console.log(err)
+                    callback({
+                        resolved : false,
+                        message : "Server error"
+                    });
+                }
+                else {
+                    callback({
+                        resolved : true,
+                        message : "Profile updated"
+                    });
+                }
+            })
+        }
+        else {
+            callback({
+                resolved : false,
+                message : "Wrong tracking id"
+            })
+        }
+    })
+}

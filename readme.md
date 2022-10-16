@@ -138,4 +138,37 @@ The **category** property's value should be one of those above
 }
 ```
 
+# Profile Edit / Setup
+
+```JSON
+{
+    "name": "Udezue OLuomachi Chimaobi",
+    "tracking_id": "hve6695crqizsusx1x7hs",
+    "profile": {
+        "gender": "",
+        "date_of_birth": "",
+        "address": "",
+        "occupation": "",
+        "contact_information": "",
+        "emergency_contact_information": "",
+        "Nationality": "",
+        "state_of_origin": "",
+        "genotype": "",
+        "blood_type": "",
+        "genetic_disease": "",
+        "Allergies": "",
+        "physical_challenge": "",
+        "weight": {
+            "value": "",
+            "time": ""
+        }
+    }
+}
+```
+
+# Note
+
+Not much security features have been implemented
+This readme file is disorganised because of limited time
+
 made with 💖 by [Udezue Oluomachi Chimaobi](https://github.com/udezueoluomachi)

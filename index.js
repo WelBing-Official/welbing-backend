@@ -8,7 +8,8 @@ const {
     search_patient,
     post_medical_report,
     add_tag,
-    login
+    login,
+    update_profile
 } = require("./functions.js")
 
 const port = process.env.PORT || 4000;
@@ -194,6 +195,34 @@ app.post("/login", (req,res) => {
         }
     })
 });
+
+app.post("/update-profile", (req, res) => {
+    let body = "";
+    req.on("data", data => body += data);
+    req.on("end", () => {
+        try {
+            const params = JSON.parse(body);
+            const arr = [params.name , params.profile, params.tracking_id];
+            if(arr.some(e => !e)) {
+                res.status(200).json({
+                    resolved : false,
+                    message : "Input error"
+                })
+            }
+            else {
+                update_profile(params, resolvement => {
+                    res.status(200).json(resolvement)
+                })
+            }
+        }
+        catch(err) {
+            res.status(200).json({
+                resolved : false,
+                message : "Error while parsing data, " + err
+            })
+        }
+    })
+})
 
 app.listen(port, () => {
     console.log("Server is running...");
