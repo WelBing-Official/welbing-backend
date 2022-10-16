@@ -108,6 +108,16 @@ The **category** property's value should be one of those above
 }
 ```
 
+# Login
+
+```JSON
+{
+  "email" : "basilchimaobi2@gmail.com",
+  "password" : "jfbejibyhrbguirbg",
+  "category" : "basic"
+}
+```
+
 # Search
 
 ```JSON

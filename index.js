@@ -7,7 +7,8 @@ const {
     register_user,
     search_patient,
     post_medical_report,
-    add_tag
+    add_tag,
+    login
 } = require("./functions.js")
 
 const port = process.env.PORT || 4000;
@@ -164,6 +165,35 @@ app.post("/post-tag", (req, res) => {
         }
     })
 })
+
+app.post("/login", (req,res) => {
+    let body = "";
+    req.on("data", data => body += data);
+    req.on("end", () => {
+        try {
+            const params = JSON.parse(body);
+            const arr = [params.email , params.password , params.category];
+            const category = ["basic", "practitioner" , "hospital"]
+            if(arr.some(e => !e) || category.indexOf(params.category) === -1 ) {
+                res.status(200).json({
+                    resolved : false,
+                    message : "Input error"
+                })
+            }
+            else {
+                login(params.email , params.password , params.category, resolvement => {
+                    res.status(200).json(resolvement)
+                })
+            }
+        }
+        catch(err) {
+            res.status(200).json({
+                resolved : false,
+                message : "Error while parsing data, " + err
+            })
+        }
+    })
+});
 
 app.listen(port, () => {
     console.log("Server is running...");

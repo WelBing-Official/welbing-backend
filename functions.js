@@ -404,3 +404,32 @@ module.exports.add_tag = function(patient_tracking_id, doctor_name, reason , tag
     })
 }
 
+module.exports.login = function(email, password , category , callback) {
+    const sql = `SELECT tracking_id FROM ${category} WHERE email_address = ? AND password = ? LIMIT 1`;
+    const values = [email, password];
+    con.query(sql , values , (err, result) => {
+        end_con();
+        if(err) {
+            console.log(err);
+            callback({
+                resolved : false,
+                message : `Server error`
+            });
+        }
+        else if(result.length > 0) {
+            callback({
+                resolved : true,
+                message : "Loging in",
+                addon : {
+                    tracking_id : result[0].tracking_id
+                }
+            })
+        }
+        else {
+            callback({
+                resolved : false,
+                message : "Incorrect email or password"
+            })
+        }
+    });
+}
